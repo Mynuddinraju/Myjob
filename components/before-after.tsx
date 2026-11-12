@@ -1,10 +1,10 @@
-"use client";
+'use client';
 import {useState} from 'react';
-export default function BeforeAfter({after,before,alt}:{after:string;before?:string|null;alt:string}){
+export default function BeforeAfter({after,before,alt,priority=false}:{after:string;before?:string|null;alt:string;priority?:boolean}){
  const [value,setValue]=useState(50);
- if(!before)return <img src={after} alt={alt} loading="lazy" decoding="async"/>;
+ if(!before)return <img src={after} alt={alt} loading={priority?'eager':'lazy'} fetchPriority={priority?'high':'auto'} decoding="async"/>;
  return <div className="compare" aria-label={`Before and after: ${alt}`}>
-   <img src={after} alt={`After: ${alt}`} loading="lazy" decoding="async"/>
+   <img src={after} alt={`After: ${alt}`} loading={priority?'eager':'lazy'} fetchPriority={priority?'high':'auto'} decoding="async"/>
    <div className="before-layer" style={{clipPath:`inset(0 ${100-value}% 0 0)`}}><img src={before} alt={`Before: ${alt}`} loading="lazy" decoding="async"/></div>
    <span className="compare-label before-tag">Before</span><span className="compare-label after-tag">After</span>
    <div className="compare-line" style={{left:`${value}%`}} aria-hidden="true"><span>↔</span></div>
