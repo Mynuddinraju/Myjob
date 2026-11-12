@@ -36,3 +36,10 @@ Next.js App Router + CSS, Vercel, Supabase Postgres/Auth (service role ONLY serv
 - [ ] Cloudinary quota monitoring and maintenance
 
 **Always preserve these requirements when making later changes. Do not expand scope unless requested.**
+
+## Setup checkpoint — 2026-11-12
+- GitHub: Mynuddinraju/Myjob, main, source and this plan pushed.
+- Supabase: **sfbusiness** ref `yndpqczomuvcnmbzdtkz`; migration `myjob_initial_schema` successfully applied. Verified seven public tables, all with RLS enabled.
+- Vercel: target described by owner as **sfbusiness**, but connected Vercel account/team lookup returns project not found, and deployment listing returns 403. Do NOT create duplicate; verify correct Vercel team/project access.
+- Cloudinary/Vercel environment variables not verified yet. Real deployment, mail delivery and before-after uploads remain untested.
+- A local npm install attempt timed out; no successful production build has been claimed.
