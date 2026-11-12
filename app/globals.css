@@ -10,3 +10,54 @@
 .reveal-tile.service{min-height:245px}
 .reveal-tile.service>article{height:100%}
 @media(prefers-reduced-motion:reduce){.reveal-tile{transition:none;transform:none}.photo-skeleton{animation:none}}
+
+/* Refined public portfolio presentation */
+:root{--navy:#0b1c2d;--gold:#dca536}
+body{overflow-x:hidden;-webkit-font-smoothing:antialiased}
+.header{backdrop-filter:blur(12px)}
+.nav nav a{transition:color .2s ease,border-color .2s ease}
+.nav nav a:hover{color:#f1c777}
+.hero{min-height:430px;position:relative;isolation:isolate;background-position:center center}
+.hero:before{content:'';position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(6,19,34,.54),rgba(6,19,34,0) 77%)}
+.hero-copy{padding:32px 0}
+.hero h1{max-width:650px;text-shadow:0 3px 16px rgba(0,0,0,.24)}
+.content>h2{letter-spacing:-.7px}
+.gallery{gap:16px}
+.photo{height:auto;aspect-ratio:1.18;min-height:220px;border-radius:13px;box-shadow:0 8px 25px rgba(9,25,43,.09);transition:box-shadow .25s}
+.photo:hover{box-shadow:0 14px 35px rgba(9,25,43,.20)}
+.photo img{display:block}
+.photo:focus-within{outline:3px solid var(--gold);outline-offset:2px}
+.photo>span{pointer-events:none}
+.services{align-items:stretch}
+.service{transition:transform .2s ease,box-shadow .2s ease}
+.service:hover{transform:translateY(-3px);box-shadow:0 12px 30px #16293e20}
+.service article>img{display:block}
+.contact{background:linear-gradient(140deg,#f6f8fb,#edf1f5);border:1px solid #e6ebf0}
+.panelbox{box-shadow:0 8px 36px #142b440b}
+.panel .primary,.panel .secondary,.panel .danger{transition:transform .16s ease,filter .16s ease}
+.panel button:hover:not(:disabled){filter:brightness(.96)}
+.panel button:disabled{opacity:.55;cursor:not-allowed}
+.admin-project{background:linear-gradient(180deg,#fff,#fafbfd);border:1px solid #dce4ec;margin:4px 0 10px}
+.admin-project .adminhead{margin-bottom:12px}
+.admin-project .uploadpreview{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:13px}
+.admin-project .uploadpreview>div{max-width:none;padding:10px;border:1px solid #e6eaf0;border-radius:12px;background:white;display:flex;flex-direction:column;gap:8px}
+.admin-project .uploadpreview img{width:100%;height:auto;aspect-ratio:4/3;object-fit:cover;border-radius:8px}
+.photo-tools{display:grid;gap:7px}
+.photo-tools .secondary,.photo-tools .danger{width:100%}
+.file-action{display:block;position:relative;text-align:center;padding:9px 11px;border-radius:8px;background:#fff5df;color:#704a05;border:1px solid #e2bc72;font-size:13px;font-weight:700;cursor:pointer}
+.file-action input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}
+.file-action:focus-within{outline:2px solid #bf861e}
+@media(max-width:850px){.photo{min-height:190px}}
+@media(max-width:600px){
+ .nav{min-height:68px}
+ .nav nav{gap:10px}
+ .nav nav a{font-size:12px;white-space:nowrap}
+ .hero{min-height:310px}
+ .hero h1{font-size:clamp(26px,7vw,35px)}
+ .gallery{gap:10px}
+ .photo{min-height:0;aspect-ratio:.91}
+ .admin-project .uploadpreview{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+ .admin-project .uploadpreview>div{padding:7px}
+ .photo-tools button,.file-action{font-size:12px}
+}
+@media(prefers-reduced-motion:reduce){.service,.photo,.nav nav a{transition:none!important}}
