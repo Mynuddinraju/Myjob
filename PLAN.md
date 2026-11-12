@@ -15,7 +15,7 @@ A lightweight, premium, mobile-first **multi-tenant completed-work photo gallery
 - Header: tenant logo/name | Completed Works | Our Services. No other menu items.
 - Completed Works is the landing view: navy/gold hero (admin-editable banner URL), photo-first responsive grid (2 mobile columns, 3-4 desktop). Optional photo caption/title. Support touch and keyboard slider.
 - Services page: admin-editable cards, photos, description. At the very end: editable company name, phone, WhatsApp, email, office address.
-- Tenant URLs: `/s/{tenant-slug}` and `/s/{tenant-slug}/services`. Later map verified custom domains to one tenant without duplicating deployments. Root domain reserved for platform introduction (no viewer login).
+- Tenant URLs: `/s/{tenant-slug}` and `/s/{tenant-slug}/services`. Later map verified custom domains to one tenant without duplicating deployments. Root domain is strictly visitor-only: show the configured DEFAULT_TENANT_SLUG company portfolio, or automatically the sole active tenant, or branded public fallback before tenant setup. Never show admin/login/sign-up on / or /services.
 - Maintain reference visual direction; sample HST images are **not authentic job photographs**.
 
 ## Tenant admin `/admin`
@@ -66,3 +66,12 @@ A lightweight, premium, mobile-first **multi-tenant completed-work photo gallery
 - Browser decoding async and native lazy loading; Cloudinary serves responsive automatically optimized images. Optional Before/After photo remains conditional.
 - If Vercel still reports `No Output Directory named public`, clear `Output Directory` override in **Vercel Settings → Build and Deployment**, set Framework Preset Next.js. This setting cannot be fixed through app source code alone.
 - Production environment values, email, Cloudinary upload, tenant controls and full live site tests must be verified prior to declaring launch ready.
+
+
+## Visitor homepage routing — 2026-11-12
+- `/` and `/services` are always **public visitor pages** without login/signup buttons or links. No separate public Home/Blog/About/Contact pages.
+- Private tenant login/signup is ONLY `/admin`; Super Admin login ONLY `/super-admin`.
+- Homepage tenant lookup: first an active custom-domain mapping; next `DEFAULT_TENANT_SLUG` (configured in Vercel); if not set, auto-use the sole active tenant. Never arbitrarily select among several tenants.
+- When no tenant exists, show a polished HST-branded public fallback with services and contact, but no fabricated completed-work images. Admin must create a tenant and upload authentic projects.
+- One SaaS deployment serves tenants at `/s/[slug]`; customer domain wiring remains future work.
+- Vercel project API continues to report not found despite screenshot evidence of its existence; GitHub push will trigger redeploy if existing integration is connected.
