@@ -24,3 +24,31 @@ export async function POST(req:Request){
 }
 export async function PATCH(req:Request){const ctx=await currentMember(req);if(!ctx)return err('Unauthorized',401);if(!active(ctx.tenant))return err('Workspace inactive',403);try{const {id,caption,sort_order}=await req.json();const values:any={};if(typeof caption==='string')values.caption=caption.slice(0,200);if(Number.isInteger(sort_order))values.sort_order=sort_order;const {error}=await ctx.client.from('photos').update(values).eq('id',id).eq('tenant_id',ctx.tenant.id);return error?err(error):reply({ok:true})}catch(e){return err(e)}}
 export async function DELETE(req:Request){const ctx=await currentMember(req);if(!ctx)return err('Unauthorized',401);if(!active(ctx.tenant))return err('Workspace inactive',403);const params=new URL(req.url).searchParams;const id=params.get('id'),beforeId=params.get('before_id');const {data:photo}=await ctx.client.from('photos').select('id,cloud_public_id,before_public_id').eq('id',id||beforeId).eq('tenant_id',ctx.tenant.id).maybeSingle();if(!photo)return err('Not found',404);try{if(beforeId){if(photo.before_public_id)await cloud().uploader.destroy(photo.before_public_id);const {error}=await ctx.client.from('photos').update({before_public_id:null,before_url:null}).eq('id',photo.id);return error?err(error):reply({ok:true})}for(const publicId of [photo.cloud_public_id,photo.before_public_id])if(publicId)await cloud().uploader.destroy(publicId);const {error}=await ctx.client.from('photos').delete().eq('id',photo.id).eq('tenant_id',ctx.tenant.id);return error?err(error):reply({ok:true})}catch(e){return err(e,502)}}
+
+
+/** Replace an existing After photo while preserving its gallery position and optional Before comparison. */
+export async function PUT(req:Request){
+ const ctx=await currentMember(req);if(!ctx)return err('Unauthorized',401);
+ if(!active(ctx.tenant))return err('Workspace inactive',403);
+ let newPublicId:string|undefined;
+ try{
+  const form=await req.formData();
+  const photoId=String(form.get('photo_id')||'');
+  const file=form.get('file');
+  if(!(file instanceof File)||file.type!=='image/webp'||file.size>2_000_000||file.size<16)return err('Optimized WebP under 2MB required');
+  const bytes=Buffer.from(await file.arrayBuffer());
+  if(bytes.subarray(0,4).toString()!=='RIFF'||bytes.subarray(8,12).toString()!=='WEBP')return err('Invalid WebP');
+  const {data:existing,error:lookupError}=await ctx.client.from('photos')
+   .select('id,cloud_public_id').eq('id',photoId).eq('tenant_id',ctx.tenant.id).eq('status','ready').maybeSingle();
+  if(lookupError)throw lookupError;
+  if(!existing)return err('Photo not found',404);
+  const uploaded=await uploadWebp(bytes,`portfolios/${ctx.tenant.id}`);
+  newPublicId=uploaded.public_id;
+  const {error}=await ctx.client.from('photos').update({cloud_public_id:uploaded.public_id,image_url:uploaded.secure_url})
+    .eq('id',photoId).eq('tenant_id',ctx.tenant.id);
+  if(error)throw error;
+  newPublicId=undefined;
+  if(existing.cloud_public_id)await cloud().uploader.destroy(existing.cloud_public_id).catch(()=>{});
+  return reply({ok:true,id:photoId});
+ }catch(e){if(newPublicId)await cloud().uploader.destroy(newPublicId).catch(()=>{});return err(e)}
+}
