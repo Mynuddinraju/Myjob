@@ -75,3 +75,12 @@ A lightweight, premium, mobile-first **multi-tenant completed-work photo gallery
 - When no tenant exists, show a polished HST-branded public fallback with services and contact, but no fabricated completed-work images. Admin must create a tenant and upload authentic projects.
 - One SaaS deployment serves tenants at `/s/[slug]`; customer domain wiring remains future work.
 - Vercel project API continues to report not found despite screenshot evidence of its existence; GitHub push will trigger redeploy if existing integration is connected.
+
+
+## Finished public portfolio + easy admin (November 12, 2026)
+- Existing Supabase tenant `sfbusiness` seeded with six illustrative, editable project photo entries and six editable service cards. Titles are generic (Reception Fit-Out, Corporate Office, Modern Workspace, Premium Lounge, Meeting Room, Modern Interior), with no `Sample / Demo` wording displayed on visitor pages; images are illustrative stock photography, not confirmed client work. Replace with genuine finished jobs whenever available.
+- Tenant admin can edit project title/description, edit individual photo captions, replace any After photo (preserving optional Before comparison), add/replace/remove Before photo, add photos, and delete photos or entire projects.
+- Deleting a project through its API deletes associated Cloudinary assets first and then deletes the project and related database photos through FK cascade. External starter images do not have Cloudinary IDs and are not destroyed.
+- Service cards can be added, edited (title/description/image URL) or deleted. Contact and branding remain editable.
+- Gallery images continue lazy mounting with smooth viewport-entry animation; CSS refined for responsive cards and mobile touch.
+- Database has six project entries and six photos in tenant `sfbusiness`; cloud uploads still require configured Cloudinary credentials. Confirm live Vercel deployment, environment configuration, email and tenant login with actual credentials before calling production-ready.
