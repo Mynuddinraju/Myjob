@@ -1,0 +1,2 @@
+import Portfolio from '@/components/portfolio';import {getTenant} from '@/lib/tenant';import {db} from '@/lib/db';import {notFound} from 'next/navigation';
+export const dynamic='force-dynamic';export default async function Services(){const tenant=await getTenant();if(!tenant)notFound();const {data}=await db().from('services').select('*').eq('tenant_id',tenant.id).order('sort_order');return <Portfolio tenant={tenant} projects={[]} services={data||[]} page="services" root/>}

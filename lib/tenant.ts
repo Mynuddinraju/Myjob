@@ -1,0 +1,2 @@
+import {headers} from 'next/headers';import {active,db} from './db';
+export async function getTenant(slug?:string){const h=await headers();const hostname=(h.get('host')||'').split(':')[0].toLowerCase();const q=db().from('tenants').select('id,slug,name,tagline,logo_url,phone,email,address,whatsapp,hero_url,status,trial_ends_at,custom_domain');const {data}=await (slug?q.eq('slug',slug):q.eq('custom_domain',hostname)).maybeSingle();return active(data)?data:null;}

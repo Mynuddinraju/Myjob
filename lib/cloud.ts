@@ -1,0 +1,4 @@
+import {v2 as cloudinary} from 'cloudinary';
+export function cloud(){cloudinary.config({cloud_name:process.env.CLOUDINARY_CLOUD_NAME,api_key:process.env.CLOUDINARY_API_KEY,api_secret:process.env.CLOUDINARY_API_SECRET,secure:true});return cloudinary}
+export async function uploadWebp(bytes:Buffer,folder:string){return new Promise<{public_id:string;secure_url:string}>((resolve,reject)=>{const stream=cloud().uploader.upload_stream({folder,resource_type:'image',format:'webp',overwrite:false,transformation:[{quality:'auto:good'}]},(error,result)=>{if(error||!result)return reject(error||new Error('Upload failed'));resolve({public_id:result.public_id,secure_url:result.secure_url})});stream.end(bytes)})}
+export function delivery(publicId:string,width=900){const c=process.env.CLOUDINARY_CLOUD_NAME;return `https://res.cloudinary.com/${encodeURIComponent(c||'')}/image/upload/f_auto,q_auto:good,c_limit,w_${width}/${publicId.split('/').map(encodeURIComponent).join('/')}`;}
